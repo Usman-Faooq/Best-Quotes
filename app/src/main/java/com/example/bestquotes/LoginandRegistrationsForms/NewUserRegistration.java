@@ -3,11 +3,13 @@ package com.example.bestquotes.LoginandRegistrationsForms;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bestquotes.R;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class NewUserRegistration extends AppCompatActivity {
 
     TextInputEditText username, useremail, userpassword;
+    TextView alreadyaccount;
     Button registration_btn;
     ProgressBar progressBar;
 
@@ -40,11 +43,19 @@ public class NewUserRegistration extends AppCompatActivity {
         useremail = findViewById(R.id.new_reg_useremail);
         userpassword = findViewById(R.id.new_reg_userpassword);
         registration_btn = findViewById(R.id.registration_btn);
+        alreadyaccount = findViewById(R.id.already_account);
         progressBar = findViewById(R.id.registrationprogressbar);
         progressBar.setVisibility(View.INVISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+
+        alreadyaccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         registration_btn.setOnClickListener(new View.OnClickListener() {
             @Override

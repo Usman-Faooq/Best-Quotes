@@ -3,12 +3,15 @@ package com.example.bestquotes.LoginandRegistrationsForms;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bestquotes.R;
@@ -22,9 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
 
     TextInputEditText login_email, login_password;
-    Button login_button, new_user_registration;
+    Button login_button;
+    TextView new_user_registration;
     ProgressBar progressBar;
     FirebaseAuth auth;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+    boolean logincheck;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,15 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.loginprogressbar);
         progressBar.setVisibility(View.INVISIBLE);
 
+        preferences = getSharedPreferences("Login_Session", Context.MODE_PRIVATE);
+        editor = preferences.edit();
         auth = FirebaseAuth.getInstance();
+
+        boolean check = preferences.getBoolean("stay_login", false);
+        if (check == true){
+            Intent i = new Intent(MainActivity.this, UserDashBoard.class);
+            startActivity(i);
+        }
 
         new_user_registration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()){
+                                        logincheck = true;
+                                        editor.putBoolean("stay_login", logincheck);
+                                        editor.apply();
                                         Intent intent = new Intent(MainActivity.this, UserDashBoard.class);
                                         startActivity(intent);
                                         progressBar.setVisibility(View.GONE);

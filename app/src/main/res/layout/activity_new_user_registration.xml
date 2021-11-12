@@ -109,6 +109,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pass" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="15dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Already Have an Account? " />
+
+    <TextView
+        android:id="@+id/already_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="sans-serif-black"
+        android:text="Signin"
+        android:textColor="@color/purple_500" />
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/registrationprogressbar"
         style="?android:attr/progressBarStyle"

@@ -5,10 +5,13 @@
       <map>
         <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/drawable/click_effect.xml" value="0.2203125" />
         <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/drawable/downloadicon.xml" value="0.2203125" />
-        <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_main.xml" value="0.19572953736654805" />
         <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_new_user_registration.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_setting.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_user_dash_board.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/activity_user_setting.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/layout/bgimagecard.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/U.G.ShEiKh/AndroidStudioProjects/BestQuotes/app/src/main/res/menu/menu.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>
