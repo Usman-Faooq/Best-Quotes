@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -64,8 +65,6 @@ public class NewUserRegistration extends AppCompatActivity {
                 String name = username.getText().toString().trim();
                 String email = useremail.getText().toString().trim();
                 String password = userpassword.getText().toString().trim();
-                DocumentReference reference = firestore.collection("users").document();
-                String user_id = reference.getId();
 
                 if (name.isEmpty() || email.isEmpty() || password.isEmpty()){
                     Toast.makeText(NewUserRegistration.this, "All Fields Are Requried", Toast.LENGTH_SHORT).show();
@@ -84,18 +83,19 @@ public class NewUserRegistration extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()){
+                                        String current_user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         Map<String, Object> user = new HashMap<>();
                                         user.put("post_likes", 0);
                                         user.put("user_email", email);
                                         user.put("user_follow", 0);
                                         user.put("user_follower", 0);
-                                        user.put("user_id", user_id);
+                                        user.put("user_id", current_user_id);
                                         user.put("user_isActive", true);
                                         user.put("user_name", name);
                                         user.put("user_posts", 0);
-                                        user.put("user_profile_img", "profile_ pics");
+                                        user.put("user_profile_img", "Profile_Image");
 
-                                        firestore.collection("users").document(user_id).set(user);
+                                        firestore.collection("users").document(current_user_id).set(user);
                                         Toast.makeText(NewUserRegistration.this, "User Register Sucessfully...", Toast.LENGTH_SHORT).show();
                                         finish();
                                         progressBar.setVisibility(View.GONE);

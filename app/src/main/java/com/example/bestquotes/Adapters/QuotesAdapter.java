@@ -1,5 +1,6 @@
 package com.example.bestquotes.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,15 +31,16 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.bestquotes.ImageSharingforUpdateAndroidVersions.SetupContext;
-import com.example.bestquotes.LoginandRegistrationsForms.MainActivity;
-import com.example.bestquotes.LoginandRegistrationsForms.NewUserRegistration;
 import com.example.bestquotes.R;
-import com.example.bestquotes.UserSetting;
 import com.example.bestquotes.VeriablesClasses.BGImageModel;
 import com.example.bestquotes.VeriablesClasses.QuotesModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,6 +48,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -54,6 +60,8 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     CollectionReference reference = firestore.collection("Images");
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseUser user = auth.getCurrentUser();
     Context context;
     public QuotesAdapter(@NonNull FirestoreRecyclerOptions<QuotesModel> options, Context context) {
         super(options);
@@ -65,11 +73,12 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
         int rendom = new Random().nextInt(6 - 1) + 1; // generate rendom number less then 6 (from 1 to 5)
         SharedPreferences preferences = context.getSharedPreferences("Check_Status", Context.MODE_PRIVATE);
         boolean check = preferences.getBoolean("status", false);
+        Dialog dialog = new Dialog(context);
 
         holder.textView.setText("\" " + model.getQuote_content() + " \"");
         holder.liketextview.setText(String.valueOf(model.getQuote_like()));
 
-        //fetching Images
+        //fetching Images and set at background
         if (check == true) {
             reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
@@ -103,7 +112,6 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                 holder.layout.setBackgroundColor(Color.parseColor("#02A899"));
             }
         }
-
 
         //save image to gallary
         holder.downloadbtn.setOnClickListener(new View.OnClickListener() {
@@ -164,12 +172,62 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
             }
         });
 
-        holder.favbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        //favourite button
+        CollectionReference collectionReference = firestore.collection("Likes");
+        if (user != null){
+            String qid = model.getQuote_id();
+            String uid = user.getUid();
+            collectionReference.document(uid).collection("Fav").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                List<String> list = new ArrayList<String>();
+                                for (QueryDocumentSnapshot snapshot :task.getResult()){
+                                    String ids = snapshot.getId().toString();
+                                    list.add(ids);
+                                }
+                                for (int i = 0 ; i<list.size() ; i++){
+                                    boolean isExist = list.contains(qid);
+                                    if (isExist == true){
+                                        holder.favbtn.setImageResource(R.drawable.likeicon);
+                                        holder.favbtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                firestore.collection("Likes").document(uid)
+                                                        .collection("Fav").document(qid).delete();
 
-            }
-        });
+                                                int likes = (int) model.getQuote_like();
+                                                likes--;
+                                                firestore.collection("quotes").document(qid).update("quote_like", likes);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                    }else{
+                                        holder.favbtn.setImageResource(R.drawable.unlikeicon);
+                                        holder.favbtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Map<String, Object> addData = new HashMap<>();
+                                                addData.put("QuoteID",qid);
+                                                addData.put("UserID", uid);
+                                                collectionReference.document(uid).collection("Fav").document(qid).set(addData);
+                                                int likes = (int) model.getQuote_like();
+                                                likes++;
+                                                firestore.collection("quotes").document(qid).update("quote_like", likes);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+        }else{
+
+        }
 
     }
 
