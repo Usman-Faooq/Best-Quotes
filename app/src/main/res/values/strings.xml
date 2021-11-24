@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Best Quotes</string>
+    <string name="open">Open_Drawer</string>
+    <string name="close">Closer_Drawer</string>
 </resources>

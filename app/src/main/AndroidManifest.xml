@@ -14,6 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BestQuotes">
         <activity
+            android:name=".CategoryDetail"
+            android:exported="true" />
+        <activity
+            android:name=".CategoryQuotes"
+            android:exported="true" />
+        <activity
+            android:name=".MostPopular"
+            android:exported="true" />
+        <activity
+            android:name=".UserProfile"
+            android:exported="true" />
+        <activity
             android:name=".LoginandRegistrationsForms.NewUserRegistration"
             android:exported="true" />
         <activity
@@ -22,18 +34,15 @@
         <activity
             android:name=".UserDashBoard"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".LoginandRegistrationsForms.MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -47,7 +56,6 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_path" />
-
         </provider>
     </application>
 

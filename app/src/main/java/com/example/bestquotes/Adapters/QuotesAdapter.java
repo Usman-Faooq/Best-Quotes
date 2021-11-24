@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,17 +33,24 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.bestquotes.ImageSharingforUpdateAndroidVersions.SetupContext;
+import com.example.bestquotes.LoginandRegistrationsForms.MainActivity;
 import com.example.bestquotes.R;
+import com.example.bestquotes.UserDashBoard;
 import com.example.bestquotes.VeriablesClasses.BGImageModel;
+import com.example.bestquotes.VeriablesClasses.FavouritesModel;
 import com.example.bestquotes.VeriablesClasses.QuotesModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -63,9 +72,10 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseUser user = auth.getCurrentUser();
     Context context;
-    public QuotesAdapter(@NonNull FirestoreRecyclerOptions<QuotesModel> options, Context context) {
+
+    public QuotesAdapter(FirestoreRecyclerOptions<QuotesModel> options, Context act) {
         super(options);
-        this.context = context;
+        context = act;
     }
 
     @Override
@@ -77,6 +87,8 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
 
         holder.textView.setText("\" " + model.getQuote_content() + " \"");
         holder.liketextview.setText(String.valueOf(model.getQuote_like()));
+        holder.authorname.setText(model.getQuote_auther());
+        holder.logotext.setVisibility(View.INVISIBLE);
 
         //fetching Images and set at background
         if (check == true) {
@@ -117,6 +129,7 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
         holder.downloadbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                holder.logotext.setVisibility(View.VISIBLE);
                 Bitmap bitmap = Bitmap.createBitmap(holder.layout.getWidth(), holder.layout.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bitmap);
                 holder.layout.draw(canvas);
@@ -134,7 +147,7 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
                     Toast.makeText(context, "Save Sucessfully", Toast.LENGTH_SHORT).show();
-
+                    holder.logotext.setVisibility(View.INVISIBLE);
                 }catch (Exception e){
                     Log.e("Falt","Some thing went Wrong...");
                 }
@@ -148,6 +161,7 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                 StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                 StrictMode.setVmPolicy(builder.build());
 
+                holder.logotext.setVisibility(View.VISIBLE);
                 Bitmap bitmap = Bitmap.createBitmap(holder.layout.getWidth(), holder.layout.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bitmap);
                 holder.layout.draw(canvas);
@@ -169,11 +183,12 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                 }catch (Exception e){
                     Log.e("Error Detail: ", String.valueOf(e));
                 }
+                holder.logotext.setVisibility(View.INVISIBLE);
             }
         });
 
         //favourite button
-        CollectionReference collectionReference = firestore.collection("Likes");
+        CollectionReference collectionReference = firestore.collection("users");
         if (user != null){
             String qid = model.getQuote_id();
             String uid = user.getUid();
@@ -194,7 +209,7 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                                         holder.favbtn.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                firestore.collection("Likes").document(uid)
+                                                firestore.collection("users").document(uid)
                                                         .collection("Fav").document(qid).delete();
 
                                                 int likes = (int) model.getQuote_like();
@@ -215,7 +230,6 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                                                 int likes = (int) model.getQuote_like();
                                                 likes++;
                                                 firestore.collection("quotes").document(qid).update("quote_like", likes);
-                                                notifyDataSetChanged();
                                             }
                                         });
 
@@ -226,7 +240,83 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
                     });
 
         }else{
+                holder.favbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.setContentView(R.layout.login_ui);
+                        dialog.setCancelable(true);
+                        dialog.show();
+                        Button signin , guest;
+                        ProgressBar bar;
+                        bar = dialog.findViewById(R.id.cardprogress);
+                        bar.setVisibility(View.INVISIBLE);
+                        signin = dialog.findViewById(R.id.card_signin);
+                        guest = dialog.findViewById(R.id.card_guest);
+                        signin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(context, MainActivity.class);
+                                context.startActivity(i);
+                            }
+                        });
 
+                        guest.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                bar.setVisibility(View.VISIBLE);
+                                auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()){
+
+                                            String current_user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                            Map<String, Object> obj = new HashMap<>();
+                                            obj.put("post_likes", 0);
+                                            obj.put("user_email", "null");
+                                            obj.put("user_follow", 0);
+                                            obj.put("user_follower", 0);
+                                            obj.put("user_id", current_user_id);
+                                            obj.put("user_isActive", true);
+                                            obj.put("user_name", "null");
+                                            obj.put("user_posts", 0);
+                                            obj.put("user_profile_img", "Profile_Image");
+                                            firestore.collection("users").document(current_user_id).set(obj);
+                                            Toast.makeText(context, "Sign in as Guest", Toast.LENGTH_SHORT).show();
+
+                                            FavouritesModel mod = new FavouritesModel(model.getQuote_id(), current_user_id);
+                                            firestore.collection("users").document(current_user_id).collection("Fav").document(model.getQuote_id()).set(mod);
+
+                                            firestore.collection("forAdmin").document("users_detail")
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()){
+                                                                DocumentSnapshot snapshot = task.getResult();
+                                                                int userstate = snapshot.getLong("total_isActive").intValue();
+                                                                int totaluser = snapshot.getLong("total_users").intValue();
+                                                                totaluser++;
+                                                                userstate++;
+                                                                Map<String, Object> obj = new HashMap<>();
+                                                                obj.put("total_isActive", userstate);
+                                                                obj.put("total_users", totaluser);
+                                                                firestore.collection("forAdmin").document("users_detail").update(obj);
+                                                            }
+                                                        }
+                                                    });
+
+
+                                            UserDashBoard.activity.recreate();
+                                            bar.setVisibility(View.GONE);
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                });
         }
 
     }
@@ -241,7 +331,7 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
 
     public class Holder extends RecyclerView.ViewHolder{
         ImageView favbtn, downloadbtn, sharebtn;
-        TextView textView, liketextview;
+        TextView textView, liketextview, logotext, authorname;
         RelativeLayout layout;
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -251,6 +341,8 @@ public class QuotesAdapter extends FirestoreRecyclerAdapter<QuotesModel, QuotesA
             layout = itemView.findViewById(R.id.layout);
             downloadbtn = itemView.findViewById(R.id.download_btn);
             sharebtn = itemView.findViewById(R.id.share_btn);
+            logotext = itemView.findViewById(R.id.signaturetext);
+            authorname = itemView.findViewById(R.id.authorname);
         }
     }
 }

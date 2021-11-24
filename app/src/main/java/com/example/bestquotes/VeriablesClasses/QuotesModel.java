@@ -3,7 +3,7 @@ package com.example.bestquotes.VeriablesClasses;
 import com.google.firebase.Timestamp;
 
 public class QuotesModel {
-    String quote_author, quote_by_user, quote_category, quote_content, quote_id;
+    String quote_auther, quote_by_user, quote_category, quote_content, quote_id;
     Timestamp  quote_date;
     long quote_like;
 
@@ -14,8 +14,8 @@ public class QuotesModel {
         this.quote_content = quote_content;
     }
 
-    public QuotesModel(String quote_author, String quote_by_user, String quote_category, String quote_content, String quote_id, Timestamp quote_date, long quote_like) {
-        this.quote_author = quote_author;
+    public QuotesModel(String quote_auther, String quote_by_user, String quote_category, String quote_content, String quote_id, Timestamp quote_date, long quote_like) {
+        this.quote_auther = quote_auther;
         this.quote_by_user = quote_by_user;
         this.quote_category = quote_category;
         this.quote_content = quote_content;
@@ -24,12 +24,12 @@ public class QuotesModel {
         this.quote_like = quote_like;
     }
 
-    public String getQuote_author() {
-        return quote_author;
+    public String getQuote_auther() {
+        return quote_auther;
     }
 
-    public void setQuote_author(String quote_author) {
-        this.quote_author = quote_author;
+    public void setQuote_auther(String quote_auther) {
+        this.quote_auther = quote_auther;
     }
 
     public String getQuote_by_user() {
@@ -56,20 +56,20 @@ public class QuotesModel {
         this.quote_content = quote_content;
     }
 
-    public Timestamp getQuote_date() {
-        return quote_date;
-    }
-
-    public void setQuote_date(Timestamp quote_date) {
-        this.quote_date = quote_date;
-    }
-
     public String getQuote_id() {
         return quote_id;
     }
 
     public void setQuote_id(String quote_id) {
         this.quote_id = quote_id;
+    }
+
+    public Timestamp getQuote_date() {
+        return quote_date;
+    }
+
+    public void setQuote_date(Timestamp quote_date) {
+        this.quote_date = quote_date;
     }
 
     public long getQuote_like() {

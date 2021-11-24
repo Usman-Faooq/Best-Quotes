@@ -2,6 +2,7 @@ package com.example.bestquotes.LoginandRegistrationsForms;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText login_email, login_password;
     Button login_button;
     TextView new_user_registration;
+    CardView cardView;
     ProgressBar progressBar;
     FirebaseAuth auth;
     SharedPreferences preferences;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cardView = findViewById(R.id.cardview);
         login_email = findViewById(R.id.login_email);
         login_password = findViewById(R.id.login_password);
         login_button = findViewById(R.id.login_btn);

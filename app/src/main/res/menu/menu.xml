@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:title="Home"
+        android:icon="@drawable/homeicon"
+        android:id="@+id/home"/>
+
+    <item
+        android:title="Link Email"
+        android:visible="false"
+        android:icon="@drawable/linkicon"
+        android:id="@+id/menu_user_profile"/>
+
+    <item
+        android:title="Category"
+        android:icon="@drawable/categoryicon"
+        android:id="@+id/categorylist"/>
+
+    <item
+        android:title="Popular"
+        android:icon="@drawable/popularicon"
+        android:id="@+id/popular_quotes"/>
 
     <item
         android:title="Setting"
         android:icon="@drawable/settingicon"
-        android:id="@+id/accountsetting"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/accountsetting"/>
+
 </menu>

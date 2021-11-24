@@ -26,12 +26,42 @@
                 android:layout_marginLeft="20sp"
                 android:layout_marginTop="70sp"
                 android:layout_marginRight="20sp"
-                android:layout_marginBottom="30sp"
                 android:fontFamily="@font/atma"
                 android:justificationMode="inter_word"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
+
+
+            <TextView
+                android:id="@+id/authorname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginRight="20sp"
+                android:layout_marginTop="10sp"
+                android:layout_marginBottom="30sp"
+                android:fontFamily="@font/atma"
+                android:alpha="0.6"
+                android:hint="Author Name"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/quotes_content"
+                android:justificationMode="inter_word"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/signaturetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/white"
+                android:layout_marginRight="10sp"
+                android:fontFamily="@font/aclonica"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"/>
 
         </RelativeLayout>
 

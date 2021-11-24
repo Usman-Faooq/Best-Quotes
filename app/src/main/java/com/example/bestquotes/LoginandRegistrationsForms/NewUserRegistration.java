@@ -3,6 +3,7 @@ package com.example.bestquotes.LoginandRegistrationsForms;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bestquotes.R;
+import com.example.bestquotes.VeriablesClasses.FavouritesModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -20,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -94,8 +97,32 @@ public class NewUserRegistration extends AppCompatActivity {
                                         user.put("user_name", name);
                                         user.put("user_posts", 0);
                                         user.put("user_profile_img", "Profile_Image");
-
                                         firestore.collection("users").document(current_user_id).set(user);
+
+                                        //adding like document...
+                                        FavouritesModel mod = new FavouritesModel("model.getQuote_id()", "current_user_id");
+                                        firestore.collection("users").document(current_user_id).collection("Fav").document("null").set(mod);
+
+                                        //Admin Status
+                                        firestore.collection("forAdmin").document("users_detail")
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()){
+                                                            DocumentSnapshot snapshot = task.getResult();
+                                                            int userstate = snapshot.getLong("total_isActive").intValue();
+                                                            int totaluser = snapshot.getLong("total_users").intValue();
+                                                            totaluser++;
+                                                            userstate++;
+                                                            Map<String, Object> obj = new HashMap<>();
+                                                            obj.put("total_isActive", userstate);
+                                                            obj.put("total_users", totaluser);
+                                                            firestore.collection("forAdmin").document("users_detail").update(obj);
+                                                        }
+                                                    }
+                                                });
+
                                         Toast.makeText(NewUserRegistration.this, "User Register Sucessfully...", Toast.LENGTH_SHORT).show();
                                         finish();
                                         progressBar.setVisibility(View.GONE);
