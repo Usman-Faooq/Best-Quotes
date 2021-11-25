@@ -7,8 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.paging.PagedList;
-import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,34 +18,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.bestquotes.Adapters.QuotesAdapter;
-import com.example.bestquotes.LoginandRegistrationsForms.MainActivity;
+import com.example.bestquotes.DrawerMenuItems.CategoryQuotes;
+import com.example.bestquotes.DrawerMenuItems.MostPopular;
+import com.example.bestquotes.DrawerMenuItems.UserProfile;
+import com.example.bestquotes.DrawerMenuItems.UserSetting;
 import com.example.bestquotes.VeriablesClasses.QuotesModel;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
 public class UserDashBoard extends AppCompatActivity {
 
@@ -191,7 +183,7 @@ public class UserDashBoard extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1){
             if (grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED){ }
-            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            //showing message
         }
     }
 }

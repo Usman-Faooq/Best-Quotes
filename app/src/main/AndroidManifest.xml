@@ -13,32 +13,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BestQuotes">
+
         <activity
-            android:name=".CategoryDetail"
-            android:exported="true" />
-        <activity
-            android:name=".CategoryQuotes"
-            android:exported="true" />
-        <activity
-            android:name=".MostPopular"
-            android:exported="true" />
-        <activity
-            android:name=".UserProfile"
-            android:exported="true" />
-        <activity
-            android:name=".LoginandRegistrationsForms.NewUserRegistration"
-            android:exported="true" />
-        <activity
-            android:name=".UserSetting"
-            android:exported="true" />
-        <activity
-            android:name=".UserDashBoard"
-            android:exported="true">
+            android:name=".SpleshScreen"
+            android:exported="true"
+            android:theme="@style/SplashStyle"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DrawerMenuItems.CategoryDetail"
+            android:exported="true" />
+        <activity
+            android:name=".DrawerMenuItems.CategoryQuotes"
+            android:exported="true" />
+        <activity
+            android:name=".DrawerMenuItems.MostPopular"
+            android:exported="true" />
+        <activity
+            android:name=".DrawerMenuItems.UserProfile"
+            android:exported="true" />
+        <activity
+            android:name=".LoginandRegistrationsForms.NewUserRegistration"
+            android:exported="true" />
+        <activity
+            android:name=".DrawerMenuItems.UserSetting"
+            android:exported="true" />
+        <activity
+            android:name=".UserDashBoard"
+            android:exported="true">
         </activity>
         <activity
             android:name=".LoginandRegistrationsForms.MainActivity"

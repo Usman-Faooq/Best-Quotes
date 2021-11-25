@@ -1,4 +1,4 @@
-package com.example.bestquotes;
+package com.example.bestquotes.DrawerMenuItems;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -11,11 +11,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
-import com.example.bestquotes.Adapters.QuotesAdapter;
+import com.example.bestquotes.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
