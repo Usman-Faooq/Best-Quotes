@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DrawerMenuItems.UserProfile">
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:alpha="0.7"
+        android:src="@drawable/linkemailicon"
+        android:layout_marginTop="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image"
+        android:text="Link Your Email"
+        android:gravity="center"
+        android:id="@+id/linkemailtext"
+        android:fontFamily="@font/atma"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_below="@+id/linkemailtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/un"
+        app:startIconDrawable="@drawable/usericon"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginTop="20sp"
+        app:hintEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#11000000"
+            android:hint="User Name"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/un"
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/emailicon"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="20sp"
+        android:id="@+id/ue">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/useremail"
+            android:hint="User Email"
+            android:background="#11000000"
+            android:inputType="textEmailAddress"
+            android:textSize="14sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ue"
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/passwordicon"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginRight="20sp"
+        android:id="@+id/up">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userpassword"
+            android:hint="User Password"
+            android:background="#11000000"
+            android:inputType="textEmailAddress"
+            android:textSize="14sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:layout_below="@+id/up"
+        android:id="@+id/updatebtn"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:layout_marginTop="20sp"/>
+
+    <Button
+        android:layout_below="@+id/up"
+        android:id="@+id/updatedonebtn"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:text="done"
+        android:layout_marginTop="20sp"/>
+
+
+    <TextView
+        android:id="@+id/helptext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/updatedonebtn"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="30sp"
+        android:fontFamily="@font/andika"
+        android:layout_marginRight="20sp"
+        android:gravity="center"
+        android:text="You are now logged in as a guest user; however, you will be unable to check in as a guest user again after logging out, and your state will be lost. Please add your email address to save your states."
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:id="@+id/updateprogressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+
+</RelativeLayout>

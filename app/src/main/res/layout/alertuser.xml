@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    app:cardCornerRadius="10sp"
+    app:cardElevation="10sp"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10sp">
+
+        <ImageView
+            android:id="@+id/topimage"
+            android:layout_width="150sp"
+            android:layout_height="150sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20sp"
+            android:src="@drawable/alerticon"/>
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10sp"
+            android:layout_below="@+id/topimage"
+            android:text="Sorry! sir, Your have already deleted your account"
+            android:gravity="center"
+            android:fontFamily="@font/atma"
+            android:textSize="20sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/alertokbtn"
+            android:layout_margin="10sp"
+            android:layout_below="@+id/tv"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

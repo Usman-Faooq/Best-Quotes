@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
@@ -31,7 +32,6 @@ import com.example.bestquotes.DrawerMenuItems.MostPopular;
 import com.example.bestquotes.DrawerMenuItems.UserProfile;
 import com.example.bestquotes.DrawerMenuItems.UserSetting;
 import com.example.bestquotes.VeriablesClasses.QuotesModel;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -40,6 +40,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDashBoard extends AppCompatActivity {
 
@@ -49,7 +53,12 @@ public class UserDashBoard extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseUser user;
     RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
     QuotesAdapter adapter;
+    DocumentSnapshot lastvisable;
+    boolean isScroll;
+    boolean islastitemreached;
+
     public static Activity activity;
 
     @Override
@@ -144,30 +153,67 @@ public class UserDashBoard extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.imagerecyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        Query query = firestore.collection("quotes");
+        Query query = firestore.collection("quotes").limit(10);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    List<QuotesModel> list = new ArrayList<>();
+                    for (DocumentSnapshot snapshot : task.getResult()){
+                        QuotesModel model = snapshot.toObject(QuotesModel.class);
+                        list.add(model);
+                    }
+                    adapter = new QuotesAdapter(list,UserDashBoard.this);
+                    recyclerView.setAdapter(adapter);
 
-        FirestoreRecyclerOptions<QuotesModel> options = new
-                FirestoreRecyclerOptions.Builder<QuotesModel>()
-                .setQuery(query, QuotesModel.class).build();
+                    lastvisable = task.getResult().getDocuments().get(task.getResult().size() - 1);
 
-        adapter = new QuotesAdapter(options, this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+                    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                                isScroll = true;
+                            }
+                        }
 
-    }
+                        @Override
+                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
+                            int firstVisableitem = layoutManager.findFirstVisibleItemPosition();
+                            int visableitemcount = layoutManager.getChildCount();
+                            int totalitem = layoutManager.getItemCount();
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
+                            if (isScroll && (firstVisableitem + visableitemcount == totalitem) && !islastitemreached){
+                                isScroll = false;
+                                Query nextquery = firestore.collection("quotes")
+                                        .startAfter(lastvisable).limit(10);
+                                nextquery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        for (DocumentSnapshot snapshot : task.getResult()) {
+                                            QuotesModel model = snapshot.toObject(QuotesModel.class);
+                                            list.add(model);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                        lastvisable = task.getResult().getDocuments().get(task.getResult().size() - 1);
+
+                                        if (task.getResult().size() < 10){
+                                            islastitemreached = true;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    recyclerView.addOnScrollListener(onScrollListener);
+                }
+            }
+        });
     }
 
     @Override
